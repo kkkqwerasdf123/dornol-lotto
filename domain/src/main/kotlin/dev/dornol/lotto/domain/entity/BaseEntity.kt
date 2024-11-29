@@ -2,13 +2,11 @@ package dev.dornol.lotto.domain.entity
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.persistence.Column
-import jakarta.persistence.Embeddable
 import jakarta.persistence.MappedSuperclass
 import java.time.LocalDateTime
 
 private val log = KotlinLogging.logger {}
 
-@Embeddable
 @MappedSuperclass
 abstract class BaseEntity : BaseCreationEntity() {
 

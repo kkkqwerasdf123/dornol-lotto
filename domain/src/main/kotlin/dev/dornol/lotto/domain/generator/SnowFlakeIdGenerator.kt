@@ -11,37 +11,39 @@ import java.time.ZoneId
 private val log = KotlinLogging.logger {}
 
 @Component
-class SnowFlakeIdGenerator(
-    private val nodeId: Long = 1L,
+final class SnowFlakeIdGenerator(
+    private val nodeId: Long = 0L,
 ) : IdentifierGenerator {
-    private val nodeIdBits: Int = 10
-    private val sequenceBits: Int = 12
-    private val epochBits: Int = 64 - 1 - nodeIdBits - sequenceBits
-    private val epoch: Long = LocalDateTime.of(2024, 1, 1, 0, 0)
-        .atZone(ZoneId.of("Asia/Seoul"))
-        .toInstant()
-        .toEpochMilli()
 
-    private val maxNodeId = (1L shl nodeIdBits) - 1
-    private val maxSequence = (1L shl sequenceBits) - 1
-    private val maxEpoch = (1L shl epochBits) - 1
+    companion object {
+        val epoch: Long = LocalDateTime.of(2024, 1, 1, 0, 0)
+            .atZone(ZoneId.of("Asia/Seoul"))
+            .toInstant()
+            .toEpochMilli()
+        const val NODE_ID_BITS: Int = 10
+        const val SEQUENCE_BITS: Int = 12
+        const val EPOCH_BITS: Int = 64 - 1 - NODE_ID_BITS - SEQUENCE_BITS
+        const val MAX_NODE_ID = (1L shl NODE_ID_BITS) - 1
+        const val MAX_SEQUENCE = (1L shl SEQUENCE_BITS) - 1
+        const val MAX_EPOCH = (1L shl EPOCH_BITS) - 1
+    }
 
     private var sequence = 0L
     private var lastTimestamp = -1L
 
     init {
-        require(nodeId in 0..maxNodeId) { "nodeId must be between 0 and $maxNodeId" }
+        require(nodeId in 0..MAX_NODE_ID) { "nodeId must be between 0 and $MAX_NODE_ID" }
     }
 
     @Synchronized
-    fun generateId(): Long {
+    private fun generateId(): Long {
         var timestamp = currentTimestamp()
 
         require(timestamp >= lastTimestamp) { "failed to generate id. Clock moved backwards." }
-        require(timestamp <= maxEpoch) { "failed to generate id" }
+        require(timestamp <= MAX_EPOCH) { "failed to generate id" }
 
         if (timestamp == lastTimestamp) {
-            sequence = (sequence + 1) and maxSequence
+            sequence = (sequence + 1) and MAX_SEQUENCE
             if (sequence == 0L) {
                 while (timestamp == lastTimestamp) {
                     Thread.sleep(1)
@@ -54,10 +56,8 @@ class SnowFlakeIdGenerator(
 
         lastTimestamp = timestamp
 
-        log.info { "generating... $timestamp" }
-
-        return ((timestamp - epoch) shl (nodeIdBits + sequenceBits)) or
-                (nodeId shl sequenceBits) or
+        return ((timestamp - epoch) shl (NODE_ID_BITS + SEQUENCE_BITS)) or
+                (nodeId shl SEQUENCE_BITS) or
                 sequence
     }
 

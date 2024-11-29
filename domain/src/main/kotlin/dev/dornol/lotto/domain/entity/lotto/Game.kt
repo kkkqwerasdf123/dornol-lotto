@@ -8,8 +8,8 @@ import jakarta.persistence.*
 class Game : BaseEntity() {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "round_id", nullable = false, updatable = false)
-    val round: Round? = null
+    @JoinColumn(name = "draw_id", nullable = false, updatable = false)
+    val draw: Draw? = null
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "game")
     val numbers: List<GameNumber> = ArrayList()

@@ -6,12 +6,14 @@ import org.springframework.data.jpa.repository.Query
 
 interface NumberRepository : JpaRepository<Number, Int> {
 
-    @Query("""
+    @Query(
+        """
         select n 
         from Number n
-        where n.number >= 1 and n.number <= 45
-        order by n.number
-    """)
+        where n.value >= 1 and n.value <= 45
+        order by n.value
+    """
+    )
     fun findAllNumbers(): List<Number>
 
 }

@@ -5,10 +5,10 @@ import jakarta.persistence.*
 import java.time.LocalDate
 
 @Entity
-@Table(name = "lotto_round")
-class Round(
-    @Column(name = "round_no", nullable = false, updatable = false, unique = true)
-    val roundNo: Long
+@Table(name = "lotto_draw")
+class Draw(
+    @Column(name = "draw_no", nullable = false, updatable = false, unique = true)
+    val drawNo: Long
 ) : BaseEntity() {
 
     var date: LocalDate? = null
@@ -21,7 +21,10 @@ class Round(
         protected set
     var finish: Boolean = false
 
-    fun setRoundInfo(date: LocalDate?, totalAmount: Long, firstWinnerAmount: Long, firstWinnerCount: Long) {
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "draw")
+    var numbers: MutableList<DrawNumber> = mutableListOf()
+
+    fun setDrawFinishInfo(date: LocalDate?, totalAmount: Long, firstWinnerAmount: Long, firstWinnerCount: Long) {
         this.date = date
         this.totalAmount = totalAmount
         this.firstWinnerAmount = firstWinnerAmount

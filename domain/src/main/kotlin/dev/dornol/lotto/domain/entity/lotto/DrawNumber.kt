@@ -4,11 +4,11 @@ import dev.dornol.lotto.domain.entity.BaseCreationEntity
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "lotto_round_number")
-class RoundNumber(
+@Table(name = "lotto_draw_number")
+class DrawNumber(
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "round_id", nullable = false, updatable = false)
-    val round: Round,
+    @JoinColumn(name = "draw_id", nullable = false, updatable = false)
+    val draw: Draw,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "number_id", nullable = false, updatable = false)
     val number: Number,

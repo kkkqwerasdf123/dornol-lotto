@@ -1,13 +1,13 @@
-package dev.dornol.lotto.api.app.dto
+package dev.dornol.lotto.api.app.dto.lottoapi
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.LocalDate
 
-data class LottoApiRoundResponse(
+data class DhLottoApiDrawResponse(
     val returnValue: String,
     @field:JsonProperty("drwNo")
-    val roundNo: Long?,
+    val drawNo: Long?,
     @field:JsonProperty("drwNoDate")
     @field:JsonFormat(pattern = "yyyy-MM-dd")
     val date: LocalDate?,
