@@ -4,6 +4,8 @@ import dev.dornol.lotto.domain.generator.SnowFlakeIdGenerator
 import org.assertj.core.api.WithAssertions
 import org.junit.jupiter.api.Test
 import java.time.Instant
+import java.util.*
+import java.util.concurrent.Executors
 import kotlin.random.Random
 
 class SnowFlakeIdGeneratorTest : WithAssertions {
@@ -51,37 +53,50 @@ class SnowFlakeIdGeneratorTest : WithAssertions {
     @Test
     fun `generate() multiple threads`() {
         //given
-        val list = mutableListOf<Long>()
+        val list = Collections.synchronizedList(mutableListOf<Long>())
         val generator = SnowFlakeIdGenerator(1L)
 
         //when
-        val threads = (0..<10).map {
-            Thread { list.addAll((0..<10000).map { generator.generate(null, null) as Long }) }
+
+        val exe = Executors.newVirtualThreadPerTaskExecutor()
+        exe.use {
+            for (i in 0..10000) {
+                it.submit {
+                    list.add(generator.generate(null, null) as Long)
+                }
+            }
         }
-        threads.forEach { it.start(); it.join() }
 
         //then
+        println("list : ${list.size}")
+        println("set : ${list.toSet().size}")
         assertThat(list).doesNotHaveDuplicates()
     }
 
     @Test
     fun `generate() multiple nodes`() {
         //given
-        val list = mutableListOf<Long>()
+        val list = Collections.synchronizedList(mutableListOf<Long>())
 
         //when
-        val threads = (0..<10).map {
-            Thread {
-                val generator = SnowFlakeIdGenerator(it.toLong())
-                list.addAll((0..<10000).map { generator.generate(null, null) as Long })
+        val exe = Executors.newVirtualThreadPerTaskExecutor()
+
+        exe.use {
+            for (i in 0..<10) {
+                val generator = SnowFlakeIdGenerator(i.toLong())
+                for (j in 0..1000) {
+                    it.submit {
+                        list.add(generator.generate(null, null) as Long)
+                    }
+
+                }
             }
         }
 
-        threads.forEach { it.start(); it.join() }
-
         //then
+        println("list : ${list.size}")
+        println("set : ${list.toSet().size}")
         assertThat(list).doesNotHaveDuplicates()
     }
-
 
 }
