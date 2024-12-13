@@ -18,6 +18,7 @@ repositories {
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
@@ -29,7 +30,6 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testImplementation("org.springframework.security:spring-security-test")
-	runtimeOnly("org.springframework.boot:spring-boot-docker-compose")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
 	implementation(project(":domain"))
@@ -37,7 +37,7 @@ dependencies {
 	// https://mvnrepository.com/artifact/io.github.oshai/kotlin-logging-jvm
 	implementation("io.github.oshai:kotlin-logging-jvm:7.0.0")
 	// https://mvnrepository.com/artifact/org.redisson/redisson-spring-boot-starter
-	implementation("org.redisson:redisson-spring-boot-starter:3.38.1")
+	implementation("org.redisson:redisson-spring-boot-starter:3.40.1")
 }
 
 kotlin {

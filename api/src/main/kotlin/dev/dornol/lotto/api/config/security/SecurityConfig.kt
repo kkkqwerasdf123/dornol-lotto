@@ -22,7 +22,7 @@ class SecurityConfig(
     private val apiAccessDeniedHandler: ApiAccessDeniedHandler,
     private val apiAuthenticationEntryPoint: ApiAuthenticationEntryPoint,
     private val authenticationSuccessHandler: FormLoginAuthenticationSuccessHandler,
-    private val authenticationFailureHandler: FormLoginAuthenticationFailureHandler
+    private val authenticationFailureHandler: FormLoginAuthenticationFailureHandler,
 ) {
 
     @Bean
@@ -61,4 +61,5 @@ class SecurityConfig(
         source.registerCorsConfiguration("/**", config)
         return source
     }
+
 }
